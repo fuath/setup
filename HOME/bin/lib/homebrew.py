@@ -23,19 +23,8 @@ def workflow(settings, fix_repo=False):
 
     ensure_command_line_tools_installed()
 
-    update()
-
-    # taps
-    update_taps(settings.get('taps', []))
-
-    # formulas
-    formulas = settings.get('formulas', [])
-    update_formulas(formulas)
-    leaves = get_leaves()
-    show_unexpected_formulas(formulas, leaves)
-
-    # casks
-    update_casks(settings.get('casks', []))
+    # install
+    bundle_install()
 
     # cleanup
     prune()
@@ -44,6 +33,12 @@ def workflow(settings, fix_repo=False):
 
     # post-install
     run_post_install(settings['post_install'])
+
+
+def bundle_install():
+    log.info("Running bundle install")
+    # path should work because cwd is set to root of repo
+    run(['brew', 'bundle', '--file', 'conf/Brewfile'])
 
 
 def ensure_homebrew_installed():
